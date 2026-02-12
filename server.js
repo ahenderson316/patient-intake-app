@@ -6,7 +6,10 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
-const DATA_FILE = path.join(__dirname, 'patients.json');
+// Use /tmp on Vercel (serverless), local file otherwise
+const DATA_FILE = process.env.VERCEL
+  ? '/tmp/patients.json'
+  : path.join(__dirname, 'patients.json');
 
 app.use(cors());
 app.use(express.json());
@@ -135,6 +138,11 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Patient Intake App running at http://localhost:${PORT}`);
-});
+// Listen only when running locally (not on Vercel)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Patient Intake App running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
