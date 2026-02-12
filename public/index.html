@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClearChart | Patient Intake</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- APP SHELL -->
+  <div id="app">
+
+    <!-- SIDEBAR NAV -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">⚕</span>
+        <span class="brand-name">ClearChart</span>
+      </div>
+      <ul class="sidebar-nav">
+        <li><a href="#" class="nav-link active" data-view="dashboard">
+          <span class="nav-icon">▦</span> Dashboard
+        </a></li>
+        <li><a href="#" class="nav-link" data-view="intake">
+          <span class="nav-icon">✚</span> New Intake
+        </a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="provider-info">
+          <div class="provider-avatar">DR</div>
+          <div>
+            <div class="provider-name">Dr. Provider</div>
+            <div class="provider-role">Primary Care</div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- DASHBOARD VIEW -->
+      <div id="view-dashboard" class="view">
+        <div class="page-header">
+          <div>
+            <h1>Patient Dashboard</h1>
+            <p class="page-subtitle">Review and manage patient intake submissions</p>
+          </div>
+          <button class="btn-primary" id="newIntakeBtn">+ New Intake</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-label">Total Patients</span>
+            <span class="stat-value" id="statTotal">0</span>
+          </div>
+          <div class="stat-card pending">
+            <span class="stat-label">Pending Review</span>
+            <span class="stat-value" id="statPending">0</span>
+          </div>
+          <div class="stat-card reviewed">
+            <span class="stat-label">Reviewed</span>
+            <span class="stat-value" id="statReviewed">0</span>
+          </div>
+          <div class="stat-card today">
+            <span class="stat-label">Submitted Today</span>
+            <span class="stat-value" id="statToday">0</span>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="table-toolbar">
+          <input type="text" id="searchInput" placeholder="Search by name, email, or complaint..." />
+          <select id="filterStatus">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="reviewed">Reviewed</option>
+          </select>
+          <input type="date" id="filterDate" title="Filter by submission date" />
+        </div>
+
+        <!-- Patient Table -->
+        <div class="table-wrap">
+          <table class="patient-table">
+            <thead>
+              <tr>
+                <th>Patient</th>
+                <th>Date of Birth</th>
+                <th>Chief Complaint</th>
+                <th>Submitted</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="patientTableBody">
+              <tr id="tableEmpty"><td colspan="6" class="empty-row">No patients found.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- INTAKE FORM VIEW -->
+      <div id="view-intake" class="view hidden">
+        <div class="page-header">
+          <div>
+            <h1>Patient Intake Form</h1>
+            <p class="page-subtitle">Complete all required fields marked with *</p>
+          </div>
+          <button class="btn-outline" id="backToDashboard">← Back to Dashboard</button>
+        </div>
+
+        <form id="intakeForm" class="intake-form" novalidate>
+
+          <!-- Section: Personal Info -->
+          <div class="form-section">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" name="firstName" required />
+              </div>
+              <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" name="lastName" required />
+              </div>
+              <div class="form-group">
+                <label>Date of Birth *</label>
+                <input type="date" name="dateOfBirth" required />
+              </div>
+              <div class="form-group">
+                <label>Biological Sex</label>
+                <select name="biologicalSex">
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="intersex">Intersex</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Gender Identity</label>
+                <input type="text" name="genderIdentity" placeholder="e.g. Non-binary, Man, Woman..." />
+              </div>
+              <div class="form-group">
+                <label>Preferred Pronouns</label>
+                <input type="text" name="pronouns" placeholder="e.g. he/him, she/her, they/them" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Contact -->
+          <div class="form-section">
+            <h2 class="section-title">Contact Information</h2>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Email Address *</label>
+                <input type="email" name="email" required />
+              </div>
+              <div class="form-group">
+                <label>Phone Number *</label>
+                <input type="tel" name="phone" placeholder="(555) 000-0000" required />
+              </div>
+              <div class="form-group span-2">
+                <label>Street Address</label>
+                <input type="text" name="address" placeholder="123 Main St" />
+              </div>
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" name="city" />
+              </div>
+              <div class="form-group">
+                <label>State</label>
+                <input type="text" name="state" maxlength="2" placeholder="e.g. CA" />
+              </div>
+              <div class="form-group">
+                <label>ZIP Code</label>
+                <input type="text" name="zip" maxlength="10" />
+              </div>
+              <div class="form-group">
+                <label>Emergency Contact Name</label>
+                <input type="text" name="emergencyName" />
+              </div>
+              <div class="form-group">
+                <label>Emergency Contact Phone</label>
+                <input type="tel" name="emergencyPhone" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Visit Reason -->
+          <div class="form-section">
+            <h2 class="section-title">Reason for Visit</h2>
+            <div class="form-group">
+              <label>Chief Complaint *</label>
+              <textarea name="chiefComplaint" rows="3" required placeholder="Describe your primary reason for this visit..."></textarea>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Symptom Duration</label>
+                <input type="text" name="symptomDuration" placeholder="e.g. 3 days, 2 weeks" />
+              </div>
+              <div class="form-group">
+                <label>Pain Level (0–10)</label>
+                <input type="number" name="painLevel" min="0" max="10" placeholder="0 = none, 10 = severe" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Medical History -->
+          <div class="form-section">
+            <h2 class="section-title">Medical History</h2>
+            <div class="form-group">
+              <label>Past Medical Conditions</label>
+              <textarea name="medicalHistory" rows="3" placeholder="e.g. Hypertension, Type 2 Diabetes, Asthma..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Past Surgeries / Procedures</label>
+              <textarea name="surgicalHistory" rows="2" placeholder="Include approximate dates if known..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Family Medical History</label>
+              <textarea name="familyHistory" rows="2" placeholder="e.g. Heart disease (father), Breast cancer (mother)..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Allergies (medications, food, environmental)</label>
+              <textarea name="allergies" rows="2" placeholder="List all known allergies and reactions..."></textarea>
+            </div>
+          </div>
+
+          <!-- Section: Current Medications -->
+          <div class="form-section">
+            <h2 class="section-title">Current Medications</h2>
+            <div class="form-group">
+              <label>Medications & Supplements</label>
+              <textarea name="medications" rows="3" placeholder="List name, dosage, and frequency for each..."></textarea>
+            </div>
+          </div>
+
+          <!-- Section: Lifestyle -->
+          <div class="form-section">
+            <h2 class="section-title">Lifestyle & Social History</h2>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Smoking Status</label>
+                <select name="smokingStatus">
+                  <option value="">Select</option>
+                  <option value="never">Never smoked</option>
+                  <option value="former">Former smoker</option>
+                  <option value="current">Current smoker</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Alcohol Use</label>
+                <select name="alcoholUse">
+                  <option value="">Select</option>
+                  <option value="none">None</option>
+                  <option value="occasional">Occasional</option>
+                  <option value="moderate">Moderate</option>
+                  <option value="heavy">Heavy</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Exercise Frequency</label>
+                <select name="exerciseFrequency">
+                  <option value="">Select</option>
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Light (1–2x/week)</option>
+                  <option value="moderate">Moderate (3–4x/week)</option>
+                  <option value="active">Active (5+x/week)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Occupation</label>
+                <input type="text" name="occupation" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Insurance -->
+          <div class="form-section">
+            <h2 class="section-title">Insurance Information</h2>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Insurance Provider</label>
+                <input type="text" name="insuranceProvider" placeholder="e.g. Blue Cross Blue Shield" />
+              </div>
+              <div class="form-group">
+                <label>Member ID</label>
+                <input type="text" name="insuranceMemberId" />
+              </div>
+              <div class="form-group">
+                <label>Group Number</label>
+                <input type="text" name="insuranceGroupNumber" />
+              </div>
+              <div class="form-group">
+                <label>Policy Holder Name</label>
+                <input type="text" name="policyHolderName" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Consent -->
+          <div class="form-section">
+            <h2 class="section-title">Consent</h2>
+            <div class="consent-checks">
+              <label class="checkbox-label">
+                <input type="checkbox" name="consentTreatment" required />
+                <span>I consent to receive medical treatment and understand that this form does not constitute a medical diagnosis. *</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="consentPrivacy" required />
+                <span>I have read and agree to the Privacy Policy and HIPAA Notice of Privacy Practices. *</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="consentAccuracy" required />
+                <span>I certify that the information provided is accurate and complete to the best of my knowledge. *</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="formError" class="form-error hidden"></div>
+          <div id="formSuccess" class="form-success hidden"></div>
+
+          <div class="form-submit-row">
+            <button type="submit" class="btn-primary btn-large">Submit Intake Form</button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- PATIENT DETAIL MODAL -->
+      <div id="patientModal" class="modal hidden">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content large">
+          <div class="modal-header">
+            <h2 id="modalPatientName"></h2>
+            <button class="modal-close" id="closeModal">&times;</button>
+          </div>
+          <div id="modalBody"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
