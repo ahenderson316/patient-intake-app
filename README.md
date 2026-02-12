@@ -1,5 +1,7 @@
 # ClearChart — Patient Intake App
 
+**[Live Demo](https://patient-intake-app-gamma.vercel.app)** &nbsp;|&nbsp; **[GitHub](https://github.com/ahenderson316/patient-intake-app)**
+
 A full-stack **healthtech** application built with **Node.js**, **Express**, and **vanilla JavaScript**. Features a patient-facing intake form and a clinical provider dashboard.
 
 ## Features
